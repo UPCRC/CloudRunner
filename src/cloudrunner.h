@@ -8,9 +8,8 @@
 #define CLOUDRUNNER_H
 
 #include <Arduino.h>
-#include "constants.h"
 
-class CloudRat{
+class CloudRunner{
     private:
         //Tresholds and Calibration values for sensors
         int L_turn_lowest_val = 100, L_turn_highest_val=0; //normalizing constants for Left turn sensor
@@ -41,6 +40,7 @@ class CloudRat{
         void check_turn();
         void reset_turn_detect();
     public:
+        CloudRunner();
 
         //Initialize board function
         void begin();
@@ -66,6 +66,6 @@ class CloudRat{
         int get_Ki();
 
 
-}
+};
 
 #endif

@@ -1,12 +1,12 @@
 #########################################
-# Syntax Coloring Map For L298N, L298NX2
+# Syntax Coloring Map For CloudRunner
 #########################################
 
 #########################################
 # Datatypes (KEYWORD1)
 #########################################
 
-CloudRat			KEYWORD1
+CloudRunner			KEYWORD1
 
 #########################################
 # Methods and Functions (KEYWORD2)

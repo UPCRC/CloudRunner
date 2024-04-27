@@ -1,0 +1,36 @@
+#########################################
+# Syntax Coloring Map For L298N, L298NX2
+#########################################
+
+#########################################
+# Datatypes (KEYWORD1)
+#########################################
+
+CloudRat			KEYWORD1
+
+#########################################
+# Methods and Functions (KEYWORD2)
+#########################################
+
+begin                       KEYWORD2
+
+read_sensor		            KEYWORD2
+calibrate_sensor		    KEYWORD2
+calibrate_turn_sensor		KEYWORD2
+getpos                      KEYWORD2
+
+beep_motor                  KEYWORD2
+motor_quartersec_beep       KEYWORD2
+drive_motor                 KEYWORD2
+follow_line                 KEYWORD2
+
+set_Kp                      KEYWORD2
+set_Kd                      KEYWORD2
+set_Ki                      KEYWORD2
+get_Kp                      KEYWORD2
+get_Kd                      KEYWORD2
+get_Ki                      KEYWORD2
+
+#########################################
+# Constants (LITERAL1)
+#########################################

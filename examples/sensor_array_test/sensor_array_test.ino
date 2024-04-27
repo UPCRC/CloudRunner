@@ -11,7 +11,7 @@ int L_turn_lowest_val = 100, L_turn_highest_val =0; //normalizing constants for 
 int R_turn_lowest_val = 100, R_turn_highest_val =0; //normalizing constants for Right turn sensor
 
 
-int mass = 0, torque=0,centroid = 0; //for line tracking
+int m_iMass = 0, torque=0,centroid = 0; //for line tracking
 int L_onblk_thresh =0, R_onblk_thresh=0; //for turn detection
 
 void setup() {
@@ -117,23 +117,23 @@ void test_PID_sensors(){
     vals[i]= 100 -  map(raw[i],lowest_val,highest_val,1,100);  //Invert values since white background
   
   //Zero out Line Position Variables
-  mass =0;
+  m_iMass =0;
   torque=0;
   centroid=0;
   
   //Calculate Position of Line using Centroid method by Kirk Charles
   //For explanation refer to: https://www.youtube.com/watch?v=RFYB0wO9ZSQ&t=1217s
   for(int i=0; i < sensor_num; i++){  //print values
-    mass += vals[i];
+    m_iMass += vals[i];
     torque += (vals[i] * i);
     Serial.print(vals[i]);
     Serial.print(" ");
   }
 
-  centroid = torque*10 / mass;
+  centroid = torque*10 / m_iMass;
   
   Serial.print(" Mass: ");
-  Serial.print(mass);
+  Serial.print(m_iMass);
   Serial.print(" ");
   Serial.print("Centroid: ");
   Serial.print(centroid);

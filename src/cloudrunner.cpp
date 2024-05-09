@@ -34,7 +34,9 @@ int CloudRunner::read_sensor(int p_sensor_pin){
   delay(1);
   pinMode(p_sensor_pin,INPUT);
 
-  while(digitalRead(p_sensor_pin) == HIGH)
+  //Wait for the voltage to fall bellow threshold of HIGH, if this takes too long 
+  //then output maximum value
+  while(digitalRead(p_sensor_pin) == HIGH && val < MAX_LIMIT_SENSE)
     val++;
     
   return val;
@@ -44,14 +46,14 @@ int CloudRunner::read_sensor(int p_sensor_pin){
 //-->Records lowest and highest values of sensor values during initiation phase (only for PID sensors)
 void CloudRunner::calibrate_sensors(){
   
-  for(int i=0, raw_val=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin--){
+  for(int i=0, raw_val=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
     raw_val = read_sensor(pin)/32;   //read sensors for raw data     
 
-    if(lowest_val > raw_val) lowest_val == raw_val;     //get values for normalizing
-    if(highest_val < raw_val) highest_val == raw_val;
+    if(lowest_val > raw_val) lowest_val = raw_val;     //get values for normalizing
+    if(highest_val < raw_val) highest_val = raw_val;
 
-    if(pin == 7)                  // skip pin D5 and D6 (used) 
-      pin -= 2;
+    if(pin == 5)                  // skip pin D6 (used) 
+      pin += 2;
   }
 }
 
@@ -70,8 +72,8 @@ void CloudRunner::calibrate_turn_sensors(){
   
 
   //----------------------Setting calibration constants for Left turn sensor------------------- 
-  if(L_turn_lowest_val > L_raw_val) L_turn_lowest_val == L_raw_val;     //get values for normalizing Left turn sensor
-  if(L_turn_highest_val < L_raw_val) L_turn_highest_val == R_raw_val;   
+  if(L_turn_lowest_val > L_raw_val) L_turn_lowest_val = L_raw_val;     //get values for normalizing Left turn sensor
+  if(L_turn_highest_val < L_raw_val) L_turn_highest_val = R_raw_val;   
 
   //Setting thresholds values based on 70% of highest mapped value
   L_thresh = thresh_percent *  map(L_raw_val,L_turn_lowest_val,L_turn_highest_val,1,100);  
@@ -79,8 +81,8 @@ void CloudRunner::calibrate_turn_sensors(){
   if( L_thresh > L_onblk_thresh) L_onblk_thresh = L_thresh;
       
   //----------------------Setting calibration constants for Right turn sensor---------------
-  if(R_turn_lowest_val > R_raw_val) R_turn_lowest_val == R_raw_val;     //get values for normalizing Right turn sensor
-  if(R_turn_highest_val < R_raw_val) R_turn_highest_val == R_raw_val;
+  if(R_turn_lowest_val > R_raw_val) R_turn_lowest_val = R_raw_val;     //get values for normalizing Right turn sensor
+  if(R_turn_highest_val < R_raw_val) R_turn_highest_val = R_raw_val;
 
   //Setting thresholds values based on 70% of highest mapped value
   R_thresh = thresh_percent *  map(R_raw_val,R_turn_lowest_val,R_turn_highest_val,1,100);  
@@ -94,20 +96,13 @@ void CloudRunner::calibrate_turn_sensors(){
 //-->Determines line position after sensor is read
 int CloudRunner::getpos() {
   int raw[SENSOR_NUM]= {0};   //contains raw values
-  int vals[SENSOR_NUM]= {0};   //contains normalized data
   
-  for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin--){
+  for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
     raw[i] = read_sensor(pin)/32;   //read sensors for raw data     
    
-    if(pin == 7)pin -= 2;      // If using all sensors, skip pin D5 and D6 (used for motors) 
+    if(pin == 5)pin += 2;      // If using all sensors, skip D6 (used) 
       
   }
-
-
-  //Normalize raw values using calibration constants
-  for(int i =0; i < SENSOR_NUM;i++)
-    vals[i]= 100 - map(raw[i],lowest_val,highest_val,1,100);
-  
   //Zero out existing Line Position Variables
   mass=0;
   torque=0;
@@ -116,11 +111,12 @@ int CloudRunner::getpos() {
   //Calculate Position of Line using Centroid method by Kirk Charles
   //For explanation refer to: https://www.youtube.com/watch?v=RFYB0wO9ZSQ&t=1217s
   for(int i=0; i < SENSOR_NUM; i++){  //print values
-    mass += vals[i];
-    torque += (vals[i] * i);
+    mass += raw[i];
+    torque += (raw[i] * i); //Torque = force + lever arm
   }
   
-  centroid = torque*10 / mass;
+  //Note this multiplier may need changing based on the board & surface's behavior
+  centroid = (torque * 100)/ mass;
 
   return centroid;
 }

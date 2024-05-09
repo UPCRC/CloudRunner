@@ -28,4 +28,7 @@
 #define L_TURN_PIN 8        //Left turn sensor pin
 #define R_TURN_PIN 2        //Right turn sensor pin
 
+
+//Constants for Math/Limits
+#define MAX_LIMIT_SENSE 10000
 #endif

@@ -44,18 +44,23 @@ int CloudRunner::read_sensor(int p_sensor_pin){
 
 //------------------Calibration function for PID sensors----------------------
 //-->Records lowest and highest values of sensor values during initiation phase (only for PID sensors)
-void CloudRunner::calibrate_sensors(){
+// Note: This sets the lowest and highest values for each sensor, since they are not uniform
+void CloudRunner::calibrate_PID_sensors(){
   
   for(int i=0, raw_val=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
     raw_val = read_sensor(pin)/32;   //read sensors for raw data     
 
-    if(lowest_val > raw_val) lowest_val = raw_val;     //get values for normalizing
-    if(highest_val < raw_val) highest_val = raw_val;
+    //Check if raw value is less than Lower bound for this sensor, set new lower bound if yes
+    if(LB_vals[i] > raw_val) LB_vals[i] = raw_val;
+    //Check if raw value is more than Upper bound for this sensor, set new upper bound if yes
+    if(UB_vals[i] < raw_val) UB_vals[i] = raw_val;
 
     if(pin == 5)                  // skip pin D6 (used) 
       pin += 2;
   }
 }
+
+
 
 //--------------Calibration function for turn sensors-----------------------
 //-> separate calibration function for turn sensors
@@ -94,7 +99,7 @@ void CloudRunner::calibrate_turn_sensors(){
 
 //----------------Function to Get Line Position----------------------
 //-->Determines line position after sensor is read
-int CloudRunner::getpos() {
+int CloudRunner::get_pos() {
   int raw[SENSOR_NUM]= {0};   //contains raw values
   
   for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
@@ -106,7 +111,7 @@ int CloudRunner::getpos() {
   //Zero out existing Line Position Variables
   mass=0;
   torque=0;
-  centroid=0;
+  pos=0;
   
   //Calculate Position of Line using Centroid method by Kirk Charles
   //For explanation refer to: https://www.youtube.com/watch?v=RFYB0wO9ZSQ&t=1217s
@@ -116,9 +121,50 @@ int CloudRunner::getpos() {
   }
   
   //Note this multiplier may need changing based on the board & surface's behavior
-  centroid = (torque * 100)/ mass;
+  pos = (torque * torque_multiplier)/ mass;
 
-  return centroid;
+  return pos;
+}
+
+
+//----------------Function to Get Line Position----------------------
+//-->Determines line position after sensor is read using the normalized values
+//Note: this assumes you have called the calibrate_sensors() method
+int CloudRunner::get_norm_pos() {
+  int raw[SENSOR_NUM]= {0};   //contains raw values
+  int norm_vals[SENSOR_NUM]={0}; //contains normalized values
+  for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
+    raw[i] = read_sensor(pin)/32;   //read sensors for raw data     
+   
+    if(pin == 5)pin += 2;      // If using all sensors, skip D6 (used) 
+      
+  }
+
+  //Take raw values from sensors and normalize them given the
+  //recorded Lower and Upper bounds for each sensor 
+  //(from most recent call of calibrate_sensors())
+  for(int i=0; i<SENSOR_NUM; i++){
+    //Normalize to a 0-100 range of value 
+    norm_vals[i] = map(raw[i], LB_vals[i], UB_vals[i], 0, 100);
+  }
+
+
+  //Zero out existing Line Position Variables
+  mass=0;
+  torque=0;
+  pos=0;
+  
+  //Calculate Position of Line using Centroid method by Kirk Charles
+  //For explanation refer to: https://www.youtube.com/watch?v=RFYB0wO9ZSQ&t=1217s
+  for(int i=0; i < SENSOR_NUM; i++){  //print values
+    mass += norm_vals[i];
+    torque += (norm_vals[i] * i); //Torque = force + lever arm
+  }
+  
+  //Note this multiplier may need changing based on the board & surface's behavior
+  pos = (torque * torque_multiplier)/ mass;
+
+  return pos;
 }
 
 
@@ -129,7 +175,6 @@ void CloudRunner::check_turn(){
 
   R_val = 100-map(read_sensor(R_TURN_PIN)/32,R_turn_lowest_val,R_turn_highest_val,1,100);
   L_val = 100-map(read_sensor(L_TURN_PIN)/32,L_turn_lowest_val,L_turn_highest_val,1,100);
-
 
   //turn detection logic
   if(R_val > R_onblk_thresh && L_val < L_onblk_thresh){
@@ -233,14 +278,15 @@ void CloudRunner::follow_line(){
   //Endlessly follow line until Intersection, Turn or End of Maze
   while(1){
     //Read motors and get the position of the line
-    pos = getpos();
+    pos = get_pos();
+    
     
     if(mass > 500){
       return;    //Reached end of maze
     }
-
+    
     //Calculate error based on current position 
-    error = pos-10;
+    error = pos- target_pos;
 
     //Calculate PID value based on error
     PID_val = PID_calc(error);
@@ -343,4 +389,20 @@ int CloudRunner::get_Kd(){
 
 int CloudRunner::get_Ki(){
   return Ki;
+}
+
+void CloudRunner::set_target_pos(int p_pos){
+  target_pos = p_pos;
+}
+
+int CloudRunner::get_target_pos(){
+  return target_pos;
+}
+
+void CloudRunner::set_torque_multiplier(int p_multiplier){
+  torque_multiplier = p_multiplier;
+}
+
+int CloudRunner::get_torque_multiplier(){
+  return torque_multiplier;
 }

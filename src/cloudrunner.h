@@ -8,7 +8,7 @@
 #define CLOUDRUNNER_H
 
 #include <Arduino.h>
-
+#include "constants.h"
 class CloudRunner{
     private:
         //Tresholds and Calibration values for sensors
@@ -17,12 +17,16 @@ class CloudRunner{
         int R_onblk_thresh=0;    //threshold value for Right turn detection
         int L_onblk_thresh=0;    //threshold value for Left turn detection
 
-        int lowest_val = 100, highest_val =0; //normalizing constants for PID sensors
+        //Array of normalizing constants for each PID sensor
+        int LB_vals[SENSOR_NUM] = {100, 100, 100};
+        int UB_vals[SENSOR_NUM] = {0, 0, 0};
 
         //Global Variables for Line Tracing
         int mass=0;
         int torque=0;
-        int centroid=0;   
+        int pos=0;
+        int target_pos =108;
+        int torque_multiplier=50;
 
         //Global Variables for PID
         int Ki = 0, Kp = 20 , Kd = 18 ;
@@ -47,9 +51,10 @@ class CloudRunner{
 
         //Sensor utility functions
         int read_sensor(int p_sensor_pin);
-        void calibrate_sensors();
+        void calibrate_PID_sensors();
         void calibrate_turn_sensors();
-        int getpos();
+        int get_pos();
+        int get_norm_pos();
 
         //Motor driver utility functions
         void beep_motor();
@@ -65,6 +70,14 @@ class CloudRunner{
         int get_Kd();
         int get_Ki();
 
+        //Utility functions to get the set target position
+        //which is used in follow_line() to calculate the error value
+        void set_target_pos(int p_pos);
+        int get_target_pos();
+
+        //Utility function to tune how we calculate the position of the line
+        void set_torque_multiplier(int p_multiplier);
+        int get_torque_multiplier();
 
 };
 

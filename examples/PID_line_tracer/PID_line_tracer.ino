@@ -8,14 +8,14 @@ void setup() {
   Serial.println("Start Calibration");
   //Manually Calibrate for 10s
   for(int i = 0; i<5; i++){
-    board.calibrate_sensors();
+    board.calibrate_PID_sensors();
     delay(500);
     Serial.println(i);
   }
   Serial.println("Done Calibration");
   
   while(1){
-    Serial.println(board.getpos());
+    Serial.println(board.get_pos());
     
   }
 }

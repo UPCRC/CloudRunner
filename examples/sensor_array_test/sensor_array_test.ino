@@ -50,21 +50,21 @@ void loop() {
   test_get_pos(); 
 
   //Uncomment this to use normalizing feature , note this assumes you had 
-  //sucessfully called calibrate_sensor()
+  //sucessfully called calibrate_PID_sensor()
   // test_get_normalize_pos();
 }
 
 
 
 //Use this test to see if you're getting correct values for the line position caluclation. 
-// for this version of the get_pos(), you dont need to use calibrate_sensors()
+// for this version of the get_pos(), you dont need to use calibrate_PID_sensors()
 // this is helpful for debugging follow_line() function
 void test_get_pos(){
   Serial.println(board.get_pos());  
 }
 
 //Use this test to see if you're getting correct values for the line position caluclation USING the normalized values
-// this implies that you successfully used the calibrate_sensors() method 
+// this implies that you successfully used the calibrate_PID_sensors() method 
 // this is helpful for debugging follow_line() function
 void test_get_normalize_pos(){
   Serial.println(board.get_norm_pos());  

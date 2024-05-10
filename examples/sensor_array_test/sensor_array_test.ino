@@ -96,7 +96,7 @@ void test_read_sensor(){
     torque += (raw[i] * i); //Torque = force + lever arm
   }
   
-  pos = torque * 100/ mass;
+  pos = (torque * board.get_torque_multiplier())/ mass;
 
   Serial.print("Centroid: ");
   Serial.print(pos);

@@ -196,10 +196,13 @@ int CloudRunner::get_norm_pos() {
 //-----------------Function to check Left and right turns---------------
 //-> Detect turns based on crossing of the threshold set by calibration
 void CloudRunner::check_turn(){
+  int R_raw =0 , L_raw =0;
   int R_val =0, L_val=0;  //mapped raw values
 
-  R_val = read_sensor(R_TURN_PIN)/32;
-  L_val = read_sensor(L_TURN_PIN)/32;
+  R_raw = read_sensor(R_TURN_PIN)/32;
+  L_raw = read_sensor(L_TURN_PIN)/32;
+  R_val = map(R_raw,R_turn_lowest_val,R_turn_highest_val,1,100);
+  L_val = map(L_raw,L_turn_lowest_val,L_turn_highest_val,1,100);
 
   
   //turn detection logic

@@ -6,8 +6,8 @@
 #define R_SPEED_PIN 9 //D9
 #define L_FORWARD A0  //A0
 #define L_BACKWARD A1 //A1
-#define R_FORWARD A2  //A2
-#define R_BACKWARD A3 //A3
+#define R_FORWARD A3  //A2
+#define R_BACKWARD A2 //A3
 
 //Constants for driveMotor functions
 #define STOP_MOTORS 0
@@ -28,4 +28,7 @@
 #define L_TURN_PIN 8        //Left turn sensor pin
 #define R_TURN_PIN 2        //Right turn sensor pin
 
+
+//Constants for Math/Limits
+#define MAX_LIMIT_SENSE 10000
 #endif

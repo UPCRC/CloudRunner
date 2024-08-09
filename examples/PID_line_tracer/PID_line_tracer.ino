@@ -1,29 +1,39 @@
 
-#include "CloudRunner.h"
+#include <cloudrunner.h>
 CloudRunner board;
+
+
 void setup() {
   //Initialize board and motors
   board.begin();
 
-  //Beep motors twice
-  board.motor_quartersec_beep(2);
-  //Manually Calibrate for 10s
-  for(int i = 0; i<10; i++){
-    board.calibrate_sensors();
-    board.calibrate_turn_sensors();
-    delay(1000);
-  }
+  //Set the PID constants here
+  board.set_Kp(8);
+  board.set_Kd(4);
+  board.set_Ki(0); // if mabilis tanggaling si ki 
+  
 
-  //Beep motors thrice
-  board.motor_quartersec_beep(3);
+  //Set your ideal center position here (for the line)
+  board.set_target_pos(50);
 
-  //Wait 5s and beep every second
-  for(int i=0; i<5; i++){
-    board.beep_motor();
-    delay(1000);
-  }
+  //Set the other constants here, this should help you
+  // solve any problems with the get pos
+  board.set_torque_multiplier(50);
+  
+
+  Serial.begin(9600);
+  Serial.println("Start Calibration");
+  board.calibrate_turn_sensors();
+  Serial.println("Done Calibration");
+
+  
 }
 
 void loop() {
+  board.drive_motor(FORWARD_MOTORS);
+  delay(30);
   board.follow_line();
+
+
+  
 }

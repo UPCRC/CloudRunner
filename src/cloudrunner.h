@@ -25,11 +25,13 @@ class CloudRunner{
         int mass=0;
         int torque=0;
         int pos=0;
-        int target_pos =108;
+        int target_pos =52;
         int torque_multiplier=50;
 
+        int count = 0;
+
         //Global Variables for PID
-        int Ki = 0, Kp = 20 , Kd = 18 ;
+        float Ki = 0, Kp = 4 , Kd = 2 ;
         int P = 0 , I = 0, D = 0 , old_D = 0 , old_error = 0;
 
         //Boolean for maze_end
@@ -69,6 +71,7 @@ class CloudRunner{
         int get_Kp();
         int get_Kd();
         int get_Ki();
+        int get_count();
 
         //Utility functions to get the set target position
         //which is used in follow_line() to calculate the error value

@@ -25,10 +25,8 @@
 #define SENSOR_NUM 3        //Number of PID sensors (3)
 #define START_SENSOR_PIN 4  //Right most PID Sensor pin
 
-#define L_TURN_PIN 2        //Left turn sensor pin
-#define R_TURN_PIN 8        //Right turn sensor pin
-//#define L_TURN_PIN 2        //Left turn sensor pin
-//#define R_TURN_PIN 8        //Right turn sensor pin
+#define L_TURN_PIN 8        //Left turn sensor pin
+#define R_TURN_PIN 2        //Right turn sensor pin
 
 
 //Constants for Math/Limits

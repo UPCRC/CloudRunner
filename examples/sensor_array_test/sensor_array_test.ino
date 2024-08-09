@@ -13,7 +13,7 @@ void setup() {
   Serial.print("Kp: ");
   Serial.print(board.get_Kp());
   Serial.print(" Kd: ");
-  Serial.print(board.get_Kd()); 
+  Serial.print(board.get_Kd());
   Serial.print(" Ki: ");
   Serial.print(board.get_Ki());
   Serial.print("\n");
@@ -30,16 +30,7 @@ void setup() {
 
 
   //This portion of the code starts the test
-  Serial.println("===== Start of calibration =====");
-  //Manually Calibrate for 5s
-  for(int i = 0; i<5; i++){
-    board.calibrate_PID_sensors();
-    delay(500);
-    Serial.println(i);
-  }
-  Serial.println("===== END of calibration =====");
-  delay(3000); // wait 3s to start the test
-  Serial.println(" -- STARTING TEST -- ");
+
 }
 
 void loop() {
@@ -47,8 +38,10 @@ void loop() {
   //Use a white strip of paper with a 1cm thick line to simulate a competition surface
   //then move the black line back and forth and observe if the value for the position changes as expected
   //i.e what value is it on the left most and right mose
-  //test_get_pos(); 
+  
   test_read_sensor();
+  //test_read_turn_sensor();
+
 
   //Uncomment this to use normalizing feature , note this assumes you had 
   //sucessfully called calibrate_PID_sensor()
@@ -71,6 +64,25 @@ void test_get_normalize_pos(){
   Serial.println(board.get_norm_pos());  
 }
 
+void test_read_turn_sensor(){
+    int L_thresh = 0, R_thresh = 0;
+  int L_raw_val = 0;
+  int R_raw_val = 0;
+  float thresh_percent = 0.5;
+  //Reading raw_values of sensor pins
+  L_raw_val = board.read_sensor(L_TURN_PIN)/32;   //read sensors for raw data 
+  R_raw_val = board.read_sensor(R_TURN_PIN)/32;   //read sensors for raw data 
+    Serial.print("left ");
+    Serial.print(" :");
+    Serial.println(String(L_raw_val)+" ");
+  
+    Serial.print("right ");
+    Serial.print(" :");
+    Serial.println(String(R_raw_val)+ " ");
+    Serial.println("\n");
+
+}
+
 //Use this test to print out raw values and diagnose any problems with getpos() function
 void test_read_sensor(){
   //Get sensor values
@@ -78,11 +90,14 @@ void test_read_sensor(){
   
   for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
     raw[i] = board.read_sensor(pin)/32;   //read sensors for raw data     
-   
+    Serial.print(String(raw[i]) + " ");
+    
     if(pin == 5)pin += 2;      // If using all sensors, skip D6 (used) 
-    Serial.print(raw[i]);
-    Serial.print(" ");      
+
+
+         
   }
+ 
 
   
   //Zero out existing Line Position Variables
@@ -99,23 +114,9 @@ void test_read_sensor(){
   
   pos = (torque * board.get_torque_multiplier())/ mass;
 
-
-  int pin2 = board.read_sensor(2)/32;;
-  int pin8 = board.read_sensor(8)/32;
-
-  Serial.println("");
-  Serial.print("Pin2: ");
-  Serial.print(pin2);
-  Serial.print(" Pin 8: ");
-  Serial.println(pin8);
-  
   Serial.print("Centroid: ");
   Serial.print(pos);
-  Serial.print(" Torque: ");
-  Serial.print(torque);
-  Serial.print(" Mass ");
-  Serial.print(mass);
   Serial.print("\n");
   
-  delay(1000);
+  delay(100);
 }

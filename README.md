@@ -43,9 +43,33 @@ In this section, you learn the basics of robotics namely **(1) Sensor Interfacin
 ### Motor Tests
 
 ### Sensor Tests
-First, go to ***File*** > ***Examples*** > ***CloudRunner*** > Click the ***sensor_array_test*** option which will show you sketches from the library you included. For the Sensor Array Test open the ‘sensor_array_test_2’.
+First, go to ***File*** > ***Examples*** > ***CloudRunner*** option which will show you sketches from the library you included. For the Sensor Array Test, click the ***sensor_array_test***.
 
+![Navigating to PreMade Sketches / Examples](<Images-ReadME/Navigating to Sensor Example.PNG>)
 
+Once you open the file, this is what it will look like.
+ 
+**NEEDS UPDATED PICTURE HERE**
+
+Now, connect the board to your laptop using a micro-USB cable. Go to the dropdown menu at the upper-left corner and click ***Select other board and port...***.
+![Board and Port Navigation](<Images-ReadME/Board and Port.PNG>)
+
+A new window will appear similar to this.
+![Configuring Board and Port Number](<Images-ReadME/Configuring Board and Port Number.PNG>)
+On the boards search bar, Select ***Arduino Nano*** 
+
+* If can not selected or not seen, you may need to install the board at the boards manager of the Arduino IDE specifically **Arduino AVR Boards by Arduino** which supports a wide array of development boards including the nano)
+    ![Installing Arduino AVR Boards](<Images-ReadME/Installing Supported Boards.PNG>)
+
+Next, Select the correct port number on the right side of the window.
+* You may verify the correct number via pressing ***Windows + X Key*** > ***Device Manager*** > ***Under Ports*** then check which port number shows up when you connect the microUSB
+* Some microUSB cables can not be recognized so make sure your laptop recognizes the cable! *Note: we have observed this problem to be frequent for charger cables included when you bought a phone*
+
+After that click the ***Upload Button*** ![Upload Button](<Images-ReadME/Upload Button.PNG>) at the upper left corner and wait for it to complete compiling and uploading. Once done, the data that the sensor is detecting will be displayed in the Serial monitor *(make sure that the baud rate = 9600!)*. Observe the **Centroid or Position** being displayed while you move the robot from left to right in the line. Notice that higher position is shown when the line is at the left of the robot. 
+
+##Output picture
+
+After getting the centroid, take note of the centroid when the robot is at the center of the line since it will be later used in the PID Line Tracer Sketch/ Main Program. 
 ### Main Program
 
 ## Documentation / References

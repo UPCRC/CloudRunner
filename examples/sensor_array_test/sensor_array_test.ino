@@ -67,6 +67,7 @@ void loop() {
 // for this version of the get_pos(), you dont need to use calibrate_PID_sensors()
 // this is helpful for debugging follow_line() function
 void test_get_pos(){
+  Serial.print("Position: ");
   Serial.println(board.get_pos());  
 }
 

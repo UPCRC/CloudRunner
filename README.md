@@ -1,3 +1,5 @@
+[grayTextColor]: #7C7C7C
+
 # The CloudRunner Project
 The goal of this project is to lower the cost barrier to beginning competitive robotics
 and in the long term, help elevate people access robotics as a field regardless of their
@@ -29,17 +31,20 @@ Access the library by going to the UPCRC CloudRunner GitHub page (https://github
 Next, include the CloudRunner library that you downloaded from Github in the Arduino IDE. Go to ***Sketch Tab*** >  ***Include Library*** > ***Add.ZIP Library*** option. Choose the ZIP file you downloaded from Github.
 ![Installing Library in Arduino IDE](<Images-ReadME/Installing ZIP Folder.png>)
 
-Verify the installation by going to the ***Sketch tab*** again and you should be able to see now in the Contributed Libraries portion, the ***CloudRunner library***.
+Verify the installation by going to the ***Sketch tab*** again and you should be able to see now in the <span style='color: #7C7C7C;'> Contributed Libraries </span> portion, the ***CloudRunner library*** or for other newer versions, it can be seen under ***Sketch Tab*** >  ***Include Library*** > under <span style='color: #7C7C7C;'> Contributed Libraries </span>.
 ![Verifying Library Installation](<Images-ReadME/Verifying Library Installation.png>)
+
 
 ## Getting Started!
 In this section, you learn the basics of robotics namely **(1) Sensor Interfacing** and **(2) Motor Actuation**
 
-### CloudRunner Board and its Important Parts
+### Introduction to CloudRunner Development Board and its Important Parts
 
 ### Motor Tests
 
 ### Sensor Tests
+First, go to ***File*** > ***Examples*** > ***CloudRunner*** > Click the ***sensor_array_test*** option which will show you sketches from the library you included. For the Sensor Array Test open the ‘sensor_array_test_2’.
+
 
 ### Main Program
 

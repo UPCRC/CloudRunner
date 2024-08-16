@@ -42,6 +42,27 @@ int CloudRunner::read_sensor(int p_sensor_pin){
   return val;
 }
 
+int CloudRunner::test_read_sensor(){  
+  int pin2 = read_sensor(2);
+  int pin4 = read_sensor(4);
+  int pin5 = read_sensor(5);
+  int pin7 = read_sensor(7);
+  int pin8 = read_sensor(8);
+
+  //printing Raw Sensor Values
+  Serial.print("Pin 2: ");
+  Serial.print(pin2);
+  Serial.print("Pin 4: ");
+  Serial.print(pin4);
+  Serial.print("Pin 5: ");
+  Serial.print(pin5);
+  Serial.print("Pin 7: ");
+  Serial.print(pin7);
+  Serial.print("Pin 8: ");
+  Serial.println(pin8);
+}
+
+
 //------------------Calibration function for PID sensors----------------------
 //-->Records lowest and highest values of sensor values during initiation phase (only for PID sensors)
 // Note: This sets the lowest and highest values for each sensor, since they are not uniform

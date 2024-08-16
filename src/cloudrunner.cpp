@@ -42,7 +42,7 @@ int CloudRunner::read_sensor(int p_sensor_pin){
   return val;
 }
 
-int CloudRunner::test_read_sensor(){  
+void CloudRunner::test_read_sensor(){  
   int pin2 = read_sensor(2);
   int pin4 = read_sensor(4);
   int pin5 = read_sensor(5);

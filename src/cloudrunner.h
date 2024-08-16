@@ -53,6 +53,7 @@ class CloudRunner{
 
         //Sensor utility functions
         int read_sensor(int p_sensor_pin);
+        void test_read_sensor();
         void calibrate_PID_sensors();
         void calibrate_turn_sensors();
         int get_pos();

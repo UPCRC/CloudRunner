@@ -23,26 +23,31 @@ void loop() {
   //Run pins motor forward
   digitalWrite(L_forward,HIGH);
   digitalWrite(L_backward,LOW);
+
+  /*Uncomment this to map wheels properly
+
   digitalWrite(R_forward,HIGH);
   digitalWrite(R_backward,LOW);
-  
+  */
+
   analogWrite(L_speed_pin,100);
   analogWrite(R_speed_pin,100);
 }
 
 
-  /*
-  //Beep Motors for Three seconds
-  for(int i = 0 ; i < 3; i++){
-   test_beep();
-   delay(250);
-   test_beep();
-   
-   delay(1000); 
-  }
+/*
+//Beep Motors for Three seconds
+for(int i = 0 ; i < 3; i++){
+  test_beep();
+  delay(250);
+  test_beep();
+  
+  delay(1000); 
+}
 
-    test_speed();
-  */
+  test_speed();
+*/
+
 
 //This is the Referrence code for the test_beep() function
 /*
@@ -66,6 +71,7 @@ void loop() {
   motorSpeed (0, 0);
 }
  */
+
 
 //--------------------------Function to use DC motors as mini buzzers-------------------
 //-> Use this function to provide feedback and make debugging easier
@@ -99,49 +105,3 @@ void test_beep(){
 }
 
 
-//---------------Function for speed and direction--------------
-//-> Use to test motor speed and direction control
-void test_speed() {
-   
-   //Run pins motor forward
-  digitalWrite(L_forward,HIGH);
-  digitalWrite(L_backward,LOW);
-  digitalWrite(R_forward,HIGH);
-  digitalWrite(R_backward,LOW);
-
-
-  for(int i = 0; i<255; i++){
-    analogWrite(L_speed_pin,i);
-    analogWrite(R_speed_pin,i);
-    delay(10);
-  }
-
-  //Stop motors for 5 seconds
-  digitalWrite(L_forward,HIGH);
-  digitalWrite(L_backward,HIGH);
-  digitalWrite(R_forward,HIGH);
-  digitalWrite(R_backward,HIGH);
-  delay(10);
-  
-  
-   //Run pins motor backwards
-  digitalWrite(L_forward,LOW);
-  digitalWrite(L_backward,HIGH);
-  digitalWrite(R_forward,LOW);
-  digitalWrite(R_backward,HIGH);
-
-  for(int i = 0; i<255; i++){
-    analogWrite(L_speed_pin,i);
-    analogWrite(R_speed_pin,i);
-    delay(10);
-  }
-
-  
-  //Stop motors for 5 seconds
-  digitalWrite(L_forward,HIGH);
-  digitalWrite(L_backward,HIGH);
-  digitalWrite(R_forward,HIGH);
-  digitalWrite(R_backward,HIGH);
-  delay(10);
-  
-}

@@ -36,11 +36,10 @@ Verify the installation by going to the ***Sketch tab*** again and you should be
 
 
 ## Getting Started!
-In this section, you learn the basics of robotics namely **(1) Sensor Interfacing** and **(2) Motor Actuation**
+In this section, you learn the basics of robotics namely **(1) Sensor Interfacing**, **(2) Motor Actuation**, and **(3) Line Tracing**
 
 ### Introduction to CloudRunner Development Board and its Important Parts
 
-### Motor Tests
 
 ### Sensor Tests
 First, go to ***File*** > ***Examples*** > ***CloudRunner*** option which will show you sketches from the library you included. For the Sensor Array Test, click the ***sensor_array_test***.
@@ -70,6 +69,55 @@ After that click the ***Upload Button*** ![Upload Button](<Images-ReadME/Upload 
 ##Output picture
 
 After getting the centroid, take note of the centroid when the robot is at the center of the line since it will be later used in the PID Line Tracer Sketch/ Main Program. 
+
+### Motor Tests
+Similar to the Sensor Interfacing,  go to ***File*** > ***Examples*** > ***CloudRunner*** > click ***motor_test***. This is what you will see once you open it.
+
+![Motor Test Example Expected Output](<Images-ReadME/open motor test.png>)
+
+As you can see, each wheel has a pair of designated pins and we need to check if it is correct as depending on how the wires were connected, there may be variations which needed to be accounted. Go to this part:
+
+![alt text](<Images-ReadME/open motor test changing loop.png>)
+
+As you can see, the Right Motor Pins are commented out (To know more about comments, you may read Arduino reference here: https://arduinogetstarted.com/reference/arduino-block-comment). First, we will test the direction and orientation of the Left Wheel. Upload the program and check if the left is moving forward. 
+
+* If the wheel moving forward is right instead of left, then this pair of pins specifically 14 and 15 as seen in the definition block (lines 2 to 8) are for the right wheel instead. This will also imply that the pins 16 and 17 originally for the right wheel is truly for the control of the left wheel. Hence, swap the pair of pins in the definition block to
+    ```
+    #define L_speed_pin 9 //D5
+    #define R_speed_pin 10 //D6
+    #define L_forward 16  //A0
+    #define L_backward 17 //A1
+    #define R_forward 14  //A2
+    #define R_backward 15 //A3
+    #define constant_speed 100
+    ```
+    * Notice we also swapped the speed pins 9 and 10. Reuploading the code will allow you to see that the left wheel will now move forward or backward instead of the right wheel. Now, check and verify the direction. 
+
+* If the wheel is moving backward instead of forward then swap the pins in the definition block to
+    ```
+    #define L_speed_pin 10 //D5
+    #define R_speed_pin 9 //D6
+    #define L_forward 15  //A0
+    #define L_backward 14 //A1
+    #define R_forward 16  //A2
+    #define R_backward 17 //A3
+    #define constant_speed 100
+    ```
+    * Swapping the pins should now make the left wheel move forward, reupload the code and verify this behavior
+
+Redo this to the right wheel by commenting the left wheel's code and uncommenting the right wheel's. After the whole process, both wheels' orientation (left or right) and direction (forward and backward) must work correctly. 
+
+For the main program, this mapping must also be used especially if you changed the pins. Go to ***File Explorer*** > ***Documents*** > ***Arduino*** > ***libraries*** > ***CloudRunner*** > ***src*** > ***constants.h***. In the ***constants.h***, switch the pins assigned under GPIO assignment block to the correct mapping that  you did similar to the definition block. Below is the code that you should have seen in the `constants.h` file.
+
+```
+//GPIO assignment
+#define L_SPEED_PIN 10 //D10
+#define R_SPEED_PIN 9 //D9
+#define L_FORWARD A0  //A0
+#define L_BACKWARD A1 //A1
+#define R_FORWARD A3  //A2
+#define R_BACKWARD A2 //A3
+```
 ### Main Program
 
 ## Documentation / References

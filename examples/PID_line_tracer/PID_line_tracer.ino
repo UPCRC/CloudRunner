@@ -22,18 +22,13 @@ void setup() {
   
 
   Serial.begin(9600);
-  Serial.println("Start Calibration");
-  board.calibrate_turn_sensors();
-  Serial.println("Done Calibration");
-
-  
+  //Serial.println("Start Calibration");
+  //board.calibrate_turn_sensors();
+  //Serial.println("Done Calibration");
 }
 
 void loop() {
   board.drive_motor(FORWARD_MOTORS);
   delay(30);
   board.follow_line();
-
-
-  
 }

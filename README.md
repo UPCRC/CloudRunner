@@ -5,18 +5,38 @@ The goal of this project is to lower the cost barrier to beginning competitive r
 and in the long term, help elevate people access robotics as a field regardless of their
 socio-economic and financial background. 
 
-CHECKING PO 
-1. correct? github library link at Downloading and Installing CloudRunner Library
-2. add more references for PWM and something about arduino UwU
-
 ## About the Repository
 This repository hosts all the necessary information about the current rendition of CloudRunner and provides a beginner-friendly library and examples for use with the CloudRunner kit. 
+
+# Table of Contents
+
+- **[Knowledge Prerequisites](#knowledge-prerequisites)**
+- **[Installation and Needed Materials](#installation-and-needed-materials)**
+- **[Getting Started](#getting-started)**
+  - **[Sensor Tests](#sensor-tests)**
+  - **[Motor Tests](#motor-tests)**
+  - **[PID Line Tracing Main Program](#main-program)**
+- **[References/Documentation](#documentation--references)**
+- **[Contact Information](#contact-information)**
+- **[Acknowledgements](#acknowledgements)**
+
+## Knowledge Prerequisites
+This documentation aims to be as beginner-friendly as possible; however, it would be helpful before starting to have basic knowledge of pulse width modulation (PWM) and common arduino functions such as analogRead, analogWrite, digitalRead and digitalWrite in order to fully understand the project. 
+
+You may read the following Arduino References for a short review or introduction:
+1. [Pulse Width Modulation](https://docs.arduino.cc/learn/microcontrollers/analog-output/)
+2. [analogRead( )](https://www.arduino.cc/reference/en/language/functions/analog-io/analogread/)
+3. [analogWrite( )](https://reference.arduino.cc/reference/en/language/functions/analog-io/analogwrite/)
+4. [digitalRead( )](https://www.arduino.cc/reference/en/language/functions/digital-io/digitalread/)
+5. [digitalWrite( )](https://www.arduino.cc/reference/en/language/functions/digital-io/digitalwrite/)
+
 
 ## Installation and Needed Materials 
 There are  3 main components needed to start utilizing the CloudRunner: 
 1. Arduino IDE (version 2.x.x was used in developing this documentation)
 2. CloudRunner Software Library
 3. CloudRunner Kit
+4. Track
 
 ### Installing the Arduino IDE
 First, download the Arduino IDE 2.0 which you can find in the Arduino website (https://www.arduino.cc/en/software).  After downloading, open it and this is what you will see. 
@@ -32,6 +52,16 @@ Next, we will include the CloudRunner library that you downloaded from Github in
 
 Verify the installation by going to the ***Sketch tab*** again and you should be able to see now in the <span style='color: #7C7C7C;'> Contributed Libraries </span> portion, the ***CloudRunner library*** or for other newer versions, it can be seen under ***Sketch Tab*** >  ***Include Library*** > under <span style='color: #7C7C7C;'> Contributed Libraries </span>.
 ![Verifying Library Installation](<Images-ReadME/Verifying Library Installation.png>)
+
+### CloudRunner Kit
+You may procure your very own CloudRunner Kit by contacting [UP Competitive Robotics Club (UP CRC)](#contact-information)
+
+### Creating the Track
+The preferred line width for the track is 1 cm in a shape of a loop especially for beginners.
+
+**PICTURE OF THE TRACK!! NEEDED HERE**
+
+This track was made in 1/2 sized illustration board using black markers for the line. 
 
 
 ## Getting Started!
@@ -73,7 +103,7 @@ A new window will appear similar to this.
 ![Configuring Board and Port Number](<Images-ReadME/Configuring Board and Port Number.PNG>)
 On the boards search bar, Select ***Arduino Nano*** 
 
-* If can not selected or not seen, you may need to install the board at the boards manager of the Arduino IDE specifically **Arduino AVR Boards by Arduino** which supports a wide array of development boards including the nano)
+* If can not selected or not seen, you may need to install the board at the boards manager of the Arduino IDE specifically **Arduino AVR Boards by Arduino** which supports a wide array of development boards including the nano
     ![Installing Arduino AVR Boards](<Images-ReadME/Installing Supported Boards.PNG>)
 
 Next, Select the correct port number on the right side of the window.
@@ -153,10 +183,48 @@ To explain briefly, how each parameter affects the robot:
 
 First, you can input any value of *Kp, Kd and Ki* and upload the code to your robot. Once uploaded, turn on your robot and place it in the line. Observe if it smoothly follows the line, if it goes over the line or moves in a zigzag manner while following the line, adjust the *Kp* and *Kd* again and then reupload. Play and calibrate with the PID values until you find the optimal values of the PID constants. For each different robot, there will also be different optimal PID values!
 
+## I'm Done! So What Now? 
+Your robotics journey is only starting! You may keep pushing forward by altering certain components from the kit such as changing the N20 motors and changing the initial speed in the `constants.h` to increase speed. **Found a bug in the software libray?** *Help and Contribute in the next iteration of it!* **Found better working components that makes the board cheaper and perform better?** *Help in the next iteration of board design!* You may contact [UP Competitive Robotics Club](#contact-information) for suggestions and findings you may have! 
+
+**Next Stops in this Documentation:** 
+1. Intersection Detection
+2. Maze Solving
+3. Uses for Other Robotics Event
+
+
+
+
+
 ## Documentation / References
+**To know more about:**
+1. ***[Common Arduino Functions and Pulse Width Modulation](#knowledge-prerequisites)***
+2. ***[Sensor Circuit Explanation by Pololu](https://www.youtube.com/watch?v=9XjSJV5MPc0&t=543s)*** 
+3. ***[Sensor Array Centroid Method by Kirk Charles](https://www.youtube.com/watch?v=RFYB0wO9ZSQ&t=1217s)***  
+4. ***[PID Introduction by Brian Douglas](https://youtu.be/UR0hOmjaHp0)*** 
+5. ***[PID Simple Example by Brian Douglas](https://www.youtube.com/watch?v=XfAt6hNV8XM)***
+
+
 
 ## Contact Information
+***Facebook*** - https://www.facebook.com/upcrc.org </br>
+***Email*** - upcrc.org@gmail.com </br>
+
 
 ## Acknowledgements
+
+#### Academic Year 2024 - 2025
+***Project Manager and Lead Programmer -*** Neil Marmeto
+
+#### Academic Year 2023 - 2024
+***Project Heads -*** Alfred Abanto, Marion Joseph Uy, Berj Alpeche </br>
+***Project Manager -*** Bryan Sy </br>
+***PCB Design -*** Marion Uy & Berj Alpeche </br>
+***Documentation -*** Bryan Sy & Angelique Hernandez </br>
+
+This project would also not be possible without the support of these organizations and its members: </br>
+***UP Competitive Robotics Club (UP CRC) -*** Aaron Isurita, Loriene Dalusung, Franzeska Balcueva, Karylle Cadalzo, Jason Dagami, Linus Catubingan, and all of its members </br>
+***Ateneo Electrical Computer Engineering Society (AECES) -*** Jan Kevin Galicia, Cristina Almario, Kyle Coloma, and all of its members </br>
+
+
 
 

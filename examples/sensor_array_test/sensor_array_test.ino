@@ -1,166 +1,90 @@
-//This code is for testing Karit v2 sensor array 
-//Written by: Alfred Abanto 14/07/2019
 
-#define sensor_num 3
-#define start_sensor_pin 7 //(Right most PID sensor)
-#define L_turn_pin 8            // Left sensor for turn detection
-#define R_turn_pin 2           // Right sensor for turn detection
-
-int lowest_val = 100, highest_val =0; //normalizing constants
-int L_turn_lowest_val = 100, L_turn_highest_val =0; //normalizing constants for Left turn sensor
-int R_turn_lowest_val = 100, R_turn_highest_val =0; //normalizing constants for Right turn sensor
-
-
-int m_iMass = 0, torque=0,centroid = 0; //for line tracking
-int L_onblk_thresh =0, R_onblk_thresh=0; //for turn detection
-
+#include <cloudrunner.h>
+#include <constants.h>
+CloudRunner board;
 void setup() {
-  Serial.begin(9600);  
-}
+  Serial.begin(9600);
 
-void loop() {
+  //Initialize board and motors
+  board.begin();
   
-  test_PID_sensors();
-  //test_elbow_sensors();
-}
+  //Print out default configuration
+  Serial.println("===== Start of configuration =====");
+  Serial.print("Kp: ");
+  Serial.print(board.get_Kp());
+  Serial.print(" Kd: ");
+  Serial.print(board.get_Kd()); 
+  Serial.print(" Ki: ");
+  Serial.print(board.get_Ki());
+  Serial.print("\n");
+  Serial.print("Torque multiplier: ");
+  Serial.print(board.get_torque_multiplier());
+  Serial.print(" Target position: ");
+  Serial.print(board.get_target_pos());
+  Serial.print("\n");
+  Serial.println("===== END of configuration =====");
+  delay(5000); //Delay for 5s
 
-//-----------------------Function for reading and testing elbow sensors---------------------------
-//-> note: currently the threshold setting is set at the same time as calibration which causes problem
-//-> it is advisable that you commentout threshold setting portion
-//-> also it is advisable to uncomment out value serial.print values
-void test_elbow_sensors(){
-   int raw[2]= {0};   //contains raw values
-  int vals[2]= {0};   //contains normalized data
-
-  //Read Left and right turn sensors
-  raw[0] = read_sensor(L_turn_pin);
-  raw[1] = read_sensor(R_turn_pin);
-
-  //Callibrate turn sensors
-  for(int i=0 ;i<2;i++){
-    if(i == 1){
-      if(R_turn_lowest_val > raw[i]) R_turn_lowest_val == raw[i];     //get values for Right normalizing
-      if(R_turn_highest_val < raw[i]) R_turn_highest_val == raw[i];  
-    }else if(i==0){
-      if(L_turn_lowest_val > raw[i]) L_turn_lowest_val == raw[i];     //get values for Left normalizing
-      if(L_turn_highest_val < raw[i]) L_turn_highest_val == raw[i];    
-    }
-  }
-  
-  //Normalize raw values
-  for(int i =0; i < 2;i++){
-    if(i == 1){
-      vals[i]= 100 - map(raw[i],R_turn_lowest_val,R_turn_highest_val,1,100);  //Invert values since white background
-
-      //after mapping set threshold value to 70% of maximum mapped value
-      if( (0.7 * vals[i]) > R_onblk_thresh) R_onblk_thresh = 0.7 * vals[i];
+/*If you want to change the default configuration
+  you can put it here
+  board.set_Kp(int p_Kp);
+  board.set_Kd(int p_Kd);
+  board.set_Ki(int p_Ki);
+  board.set_torque_multiplier(int p_multiplier);
+  board.set_target_pos(int p_pos);
+  */
     
-    }else if( i ==0){
-      vals[i]= 100 - map(raw[i],L_turn_lowest_val,L_turn_highest_val,1,100);  //Invert values since white background
-      //after mapping set threshold value to 70% of maximum mapped value
-      if( (0.7 * vals[i]) > L_onblk_thresh) L_onblk_thresh = 0.7 * vals[i];
-    }
-  }
+  //This portion of the code starts the test
 
-  //Portion which prints out turn sensor values
-  
-  Serial.print(" Left turn:");
-  Serial.print(vals[0]);
-  //Serial.print(" Thresh L:");
-  //Serial.print(vals[0] * 0.6);
-  Serial.print(" Right turn:");
-  Serial.print(vals[1]);
-  //Serial.print(" Thresh R:");
-  //Serial.print(vals[1] * 0.6);
+  /*This portion is skipped until further checking of functionalities
 
-  
-  
-  
-  //Turn detection ,uncomment if you only want to print out vals
-  /*
-  if(vals[1] > R_onblk_thresh && vals[0] < L_onblk_thresh)
-    Serial.print(" Right turn detected");
-  else if(vals[1] < R_onblk_thresh && vals[0] > L_onblk_thresh)
-    Serial.print(" Left turn detected");
-  else if(vals[1] > R_onblk_thresh && vals[0] > L_onblk_thresh)
-    Serial.print(" intersection detected");
-  else
-    Serial.print(" no detection");
+  Serial.println("===== Start of calibration =====");
+  //Manually Calibrate for 5s
+  board.calibrate_PID_sensors();
+
+  Serial.println("===== END of calibration =====");
+  delay(3000); // wait 3s to start the test
   */
 
-  Serial.print("\n");
+  Serial.println(" -- STARTING TEST -- ");
 }
 
-
-
-
-
-//-----------------------------------Function for Reading center 3 PID sensors-------------------
-void test_PID_sensors(){
-  int raw[sensor_num]= {0};   //contains raw values
-  int vals[sensor_num]= {0};   //contains normalized data
-  
-  
-  for(int i=0, pin= start_sensor_pin; i < sensor_num;i++,pin--){
-    raw[i] = read_sensor(pin)/32;   //read sensors
-    
-    if(lowest_val > raw[i]) lowest_val == raw[i];     //get values for normalizing
-    if(highest_val < raw[i]) highest_val == raw[i];   
-    
-    if(pin == 7) pin -= 2;                 // If using all sensors,skip pin D5 and D6 (used for Motor pins) 
-      
-  }
-
-
-  //Normalize raw values
-  for(int i =0; i < sensor_num;i++)
-    vals[i]= 100 -  map(raw[i],lowest_val,highest_val,1,100);  //Invert values since white background
-  
-  //Zero out Line Position Variables
-  m_iMass =0;
-  torque=0;
-  centroid=0;
-  
-  //Calculate Position of Line using Centroid method by Kirk Charles
+//Calculate Position of Line using Centroid method by Kirk Charles
   //For explanation refer to: https://www.youtube.com/watch?v=RFYB0wO9ZSQ&t=1217s
-  for(int i=0; i < sensor_num; i++){  //print values
-    m_iMass += vals[i];
-    torque += (vals[i] * i);
-    Serial.print(vals[i]);
-    Serial.print(" ");
-  }
 
-  centroid = torque*10 / m_iMass;
-  
-  Serial.print(" Mass: ");
-  Serial.print(m_iMass);
-  Serial.print(" ");
-  Serial.print("Centroid: ");
-  Serial.print(centroid);
-  Serial.print(" ");
-  Serial.print("Torque: ");
-  Serial.print(torque);
-  test_elbow_sensors();
-  Serial.print("\n");
+void loop() {
+  //Instructions: 
+  //Use a white strip of paper with a 1cm thick line to simulate a competition surface
+  //then move the black line back and forth and observe if the value for the position changes as expected
+  //i.e what value is it on the left most and right mose
+  test_get_pos(); 
+  //board.test_read_sensor();
+
+  //Uncomment this to use normalizing feature , note this assumes you had 
+  //sucessfully called calibrate_PID_sensor()
+  // test_get_normalize_pos();
 }
 
 
-
-
-
-
-//-------------------------Sensor Reading code-----------------------------
-//This code works for sensor circuit based on 3pi robot by Pololu 
-//For circuit explanation Refer to : https://www.youtube.com/watch?v=9XjSJV5MPc0&t=543s
-int read_sensor(int sensor_pin){  
-  pinMode(sensor_pin,OUTPUT);
-  digitalWrite(sensor_pin,HIGH);
-  long val = 0;
-  delay(1);
-  pinMode(sensor_pin,INPUT);
-
-  while(digitalRead(sensor_pin) == HIGH)
-    val++;
-    
-  return val;
+//Use this test to see if you're getting correct values for the line position caluclation. 
+// for this version of the get_pos(), you dont need to use calibrate_PID_sensors()
+// this is helpful for debugging follow_line() function
+void test_get_pos(){
+  Serial.print("Position: ");
+  Serial.println(board.get_pos());  
 }
+
+//Use this test to retrieve raw values from the sensors
+//for debugging purposes
+void print_raw_values(){
+  board.test_read_sensor();
+}
+
+//Use this test to see if you're getting correct values for the line position caluclation USING the normalized values
+// this implies that you successfully used the calibrate_PID_sensors() method 
+// this is helpful for debugging follow_line() function
+void test_get_normalize_pos(){
+  Serial.println(board.get_norm_pos());  
+}
+
+

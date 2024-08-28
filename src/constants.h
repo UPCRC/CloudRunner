@@ -18,7 +18,7 @@
 #define TURNBACK 23 
 
 //Constants for PID functions
-#define INIT_SPEED 50
+#define INIT_SPEED 100
 
 
 //Constants for sensor functions/routines

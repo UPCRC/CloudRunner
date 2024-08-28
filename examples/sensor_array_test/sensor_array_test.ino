@@ -25,20 +25,23 @@ void setup() {
   Serial.println("===== END of configuration =====");
   delay(5000); //Delay for 5s
 
- //If you want to change the default configuration
- //you can put it here
-
-
+/*If you want to change the default configuration
+  you can put it here
+  board.set_Kp(int p_Kp);
+  board.set_Kd(int p_Kd);
+  board.set_Ki(int p_Ki);
+  board.set_torque_multiplier(int p_multiplier);
+  board.set_target_pos(int p_pos);
+  */
+    
   //This portion of the code starts the test
+
   /*This portion is skipped until further checking of functionalities
 
   Serial.println("===== Start of calibration =====");
   //Manually Calibrate for 5s
-  for(int i = 0; i<5; i++){
-    board.calibrate_PID_sensors();
-    delay(500);
-    Serial.println(i);
-  }
+  board.calibrate_PID_sensors();
+
   Serial.println("===== END of calibration =====");
   delay(3000); // wait 3s to start the test
   */
@@ -55,7 +58,7 @@ void loop() {
   //then move the black line back and forth and observe if the value for the position changes as expected
   //i.e what value is it on the left most and right mose
   test_get_pos(); 
-  //test_read_sensor();
+  //board.test_read_sensor();
 
   //Uncomment this to use normalizing feature , note this assumes you had 
   //sucessfully called calibrate_PID_sensor()
@@ -74,7 +77,7 @@ void test_get_pos(){
 //Use this test to retrieve raw values from the sensors
 //for debugging purposes
 void print_raw_values(){
-  board.test_read_sensor
+  board.test_read_sensor();
 }
 
 //Use this test to see if you're getting correct values for the line position caluclation USING the normalized values

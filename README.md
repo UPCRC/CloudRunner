@@ -71,18 +71,18 @@ In this section, you learn the basics of robotics namely **(1) Sensor Interfacin
 The CloudRunner is a development board that integrates light sensors and motor drivers to create a low-cost, low-barrier of entry, to robotics. Specifically, the board will allow the development of tabletop line-tracing robots.
 ![CloudRunner Board and Its parts](<Images-ReadME/CloudRunner Board.png>)
 
-1. **Microcontroller or MCU (ATMEGA328P-AU) -**
+1. ![#8bff55](https://placehold.co/15x15/8bff55/8bff55.png) **Microcontroller or MCU (ATMEGA328P-AU) -**
 A microcontroller is a compact integrated circuit (IC) typically used for embedded systems. It includes a processor, memory, and input/output (IO) peripherals on a single chip which makes it the “brain” of several complex systems. Other peripherals are also included depending on the MCU such as Analog-to-Digital Converter (ADC), Digital-to-Analog Converter (DAC), Timers, Communication Interfaces such as UART, I2C, SPI, PWM, etc.
 ATMEGA328P-AU (Light Green) by Microchip Technology mainly used in the Arduino environment is the MCU used in Cloudrunner for its beginner-friendly environment with lots of resources, tutorials, and community support. Many MCUs can be chosen from different vendors such as STM32  by STMicroelectronics or NordicMCU by Nordic Semiconductor hence choosing of MCU revolves around different factors such as price, energy consumption, speed, or even other integrated interfaces (eg. Bluetooth, Ethernet, Number of Pins, etc.) 
-2. **Light Sensor Array (QRE1113GR) -** 
+2. ![#ff0000](https://placehold.co/15x15/ff0000/ff0000.png) **Light Sensor Array (QRE1113GR) -** 
 A light sensor array consists of several light sensors arranged in a specific pattern. A light sensor is a device that detects the presence and intensity of light which is converted to electrical signals that can be processed, analyzed, and trigger specific actions depending on the system which can give information regarding the environment such as color
 The QRE1113GR (Red) is the light sensor used in CloudRunner, it is made using a phototransistor wherein a higher current (electrical signal) flows through it when higher light intensity is achieved. Other light sensor uses photodiodes, photovoltaic cells, etc. Choosing the sensor revolves around a number of factors (size, cost, sensitivity, etc.) 
-3. **Motor Driver (XL293-20) -**
+3. ![#026618](https://placehold.co/15x15/026618/026618.png) **Motor Driver (XL293-20) -**
 A motor driver is a component that controls the operation of a motor such as speed and direction. These devices are important to protect the MCU from large current draws needed by a motor; in addition, a typical MCU can only provide 5V in output which is insufficient to drive the power requirements needed by a motor. 
 The XL293-20 (Dark Green) is the motor driver used in CloudRunner, it can control up to 2 DC motors with 1A peak output current.
-4. **Power Input (9V Battery) -**
+4. ![#1cada0](https://placehold.co/15x15/1cada0/1cada0.png) **Power Input (9V Battery) -**
 The CloudRunner is powered by a 9V Battery connected to the pins shown (cyan) 
-5. **Motors (N20 DC Motor) -**
+5. ![#ff19aa](https://placehold.co/15x15/ff19aa/ff19aa.png) **Motors (N20 DC Motor) -**
 Motors are devices that convert electrical energy to mechanical energy
 N20 DC Motor will be used in this workshop, it is a 6V rated motor that can range from 55rpm up to 500 rpm depending on the specific N20 Motor used
 
@@ -93,8 +93,8 @@ First, go to ***File*** > ***Examples*** > ***CloudRunner*** option which will s
 ![Navigating to PreMade Sketches / Examples](<Images-ReadME/Navigating to Sensor Example.PNG>)
 
 Once you open the file, this is what it will look like.
- 
-**NEEDS UPDATED PICTURE HERE**
+
+![Sensor Array Test File](<Images-ReadME\Sensor Array Test.png>)
 
 Now, connect the board to your laptop using a micro-USB cable. Go to the dropdown menu at the upper-left corner and click ***Select other board and port...***.
 ![Board and Port Navigation](<Images-ReadME/Board and Port.PNG>)

@@ -59,9 +59,9 @@ You may procure your very own CloudRunner Kit by contacting [UP Competitive Robo
 ### Creating the Track
 The preferred line width for the track is 1 cm in a shape of a loop especially for beginners.
 
-**PICTURE OF THE TRACK!! NEEDED HERE**
+![Sample Track](<Images-ReadME/track.jpg>)
 
-This track was made in 1/2 sized illustration board using black markers for the line. 
+This track was made in 1/2 sized illustration board using electrical tape for the line. 
 
 
 ## Getting Started!
@@ -185,6 +185,9 @@ First, you can input any value of *Kp, Kd and Ki* and upload the code to your ro
 
 ## I'm Done! So What Now? 
 Your robotics journey is only starting! You may keep pushing forward by altering certain components from the kit such as changing the N20 motors and changing the initial speed in the `constants.h` to increase speed. **Found a bug in the software libray?** *Help and Contribute in the next iteration of it!* **Found better working components that makes the board cheaper and perform better?** *Help in the next iteration of board design!* You may contact [UP Competitive Robotics Club](#contact-information) for suggestions and findings you may have! 
+
+This is a sample run of CloudRunner.
+![Sample Run](<Images-ReadME/sample run.gif>)
 
 **Next Stops in this Documentation:** 
 1. Intersection Detection

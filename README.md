@@ -94,7 +94,7 @@ First, go to ***File*** > ***Examples*** > ***CloudRunner*** option which will s
 
 Once you open the file, this is what it will look like.
 
-![Sensor Array Test File](<Images-ReadME\Sensor Array Test.png>)
+![Sensor Array Test File](<Images-ReadME/Sensor Array Test.png>)
 
 Now, connect the board to your laptop using a micro-USB cable. Go to the dropdown menu at the upper-left corner and click ***Select other board and port...***.
 ![Board and Port Navigation](<Images-ReadME/Board and Port.PNG>)

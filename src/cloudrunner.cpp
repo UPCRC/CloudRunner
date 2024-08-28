@@ -42,6 +42,27 @@ int CloudRunner::read_sensor(int p_sensor_pin){
   return val;
 }
 
+void CloudRunner::test_read_sensor(){  
+  int pin2 = read_sensor(2)/32;
+  int pin4 = read_sensor(4)/32;
+  int pin5 = read_sensor(5)/32;
+  int pin7 = read_sensor(7)/32;
+  int pin8 = read_sensor(8)/32;
+
+  //printing Raw Sensor Values
+  Serial.print("Pin 2: ");
+  Serial.print(pin2);
+  Serial.print("Pin 4: ");
+  Serial.print(pin4);
+  Serial.print("Pin 5: ");
+  Serial.print(pin5);
+  Serial.print("Pin 7: ");
+  Serial.print(pin7);
+  Serial.print("Pin 8: ");
+  Serial.println(pin8);
+}
+
+
 //------------------Calibration function for PID sensors----------------------
 //-->Records lowest and highest values of sensor values during initiation phase (only for PID sensors)
 // Note: This sets the lowest and highest values for each sensor, since they are not uniform
@@ -49,7 +70,7 @@ void CloudRunner::calibrate_PID_sensors(){
   
   unsigned int start = millis(); 
 
-  while (millis() - start < 10000) {
+  while (millis() - start < 5000) {
     for(int i=0, raw_val=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
       raw_val = read_sensor(pin)/32;   //read sensors for raw data     
 
@@ -76,7 +97,7 @@ void CloudRunner::calibrate_turn_sensors(){
   int L_raw_val = 0, R_raw_val = 0;
   float R_Thresh_percent = 0.67, L_Thresh_percent = 0.85;
   
-  while (millis() - start < 10000) {
+  while (millis() - start < 5000) {
 
     //Reading raw_values of sensor pins
     L_raw_val = read_sensor(L_TURN_PIN)/32;   //read sensors for raw data 
@@ -127,7 +148,7 @@ int CloudRunner::get_pos() {
   for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
     raw[i] = read_sensor(pin)/32;   //read sensors for raw data     
 
-    if(pin == 5)pin += 1;      // If using all sensors, skip D6 (used) 
+    if(pin == 2|| pin == 5)pin += 1;      // If using all sensors, skip D6 (used) 
       
   }
   //Zero out existing Line Position Variables
@@ -196,10 +217,13 @@ int CloudRunner::get_norm_pos() {
 //-----------------Function to check Left and right turns---------------
 //-> Detect turns based on crossing of the threshold set by calibration
 void CloudRunner::check_turn(){
+  int R_raw =0 , L_raw =0;
   int R_val =0, L_val=0;  //mapped raw values
 
-  R_val = read_sensor(R_TURN_PIN)/32;
-  L_val = read_sensor(L_TURN_PIN)/32;
+  R_raw = read_sensor(R_TURN_PIN)/32;
+  L_raw = read_sensor(L_TURN_PIN)/32;
+  R_val = map(R_raw,R_turn_lowest_val,R_turn_highest_val,1,100);
+  L_val = map(L_raw,L_turn_lowest_val,L_turn_highest_val,1,100);
 
   
   //turn detection logic
@@ -285,8 +309,8 @@ void CloudRunner::PID_steer(int p_PID_val) {
   float Rspeed = INIT_SPEED - p_PID_val;
 
   // The motor speed should not exceed the max PWM value
-  Lspeed = constrain(Lspeed, 10, 100);
-  Rspeed = constrain(Rspeed, 10, 100);
+  Lspeed = constrain(Lspeed, 50, 255);
+  Rspeed = constrain(Rspeed, 50, 255);
 
   analogWrite(L_SPEED_PIN, Lspeed); //Left Motor Speed
   analogWrite(R_SPEED_PIN, Rspeed); //Right Motor Speed
@@ -324,6 +348,7 @@ void CloudRunner::follow_line(){
     //Read motors and get the position of the line
 
     pos = get_pos();
+    //Serial.println(pos);  
     
     /*
     if(mass > 500){
@@ -336,13 +361,13 @@ void CloudRunner::follow_line(){
 
     //Calculate PID value based on error
     PID_val = PID_calc(error);
-    //Serial.println("spd add " + String(PID_val) + "\n");
+    Serial.println("spd add " + String(PID_val) + "\n");
     //check for turns & intersections
     check_turn();
     //Serial.println(count);
     //if junction detected, just move forward
     //and skip PID steer
-    
+    /*
     if(Intersect_detected){
       
       drive_motor(FORWARD_MOTORS);
@@ -351,22 +376,23 @@ void CloudRunner::follow_line(){
       count++;
       if(count >=4){
       break;
-    }
+      }
       
     }else{
       //if turn isnt detected continue following line
       //Use calculated PID value
       PID_steer(PID_val);
-    }
+    }*/
+   PID_steer(PID_val);
     
 
     //after checking for turns reset all flags
     reset_turn_detect();
   }
-    drive_motor(FORWARD_MOTORS);
-    delay(250);
+    //drive_motor(FORWARD_MOTORS);
+    //delay(250);
     drive_motor(STOP_MOTORS);
-    delay(10000);
+    delay(1000000);
     return;
   
   

@@ -30,35 +30,37 @@ void CloudRunner::begin(){
 int CloudRunner::read_sensor(int p_sensor_pin){  
   pinMode(p_sensor_pin,OUTPUT);
   digitalWrite(p_sensor_pin,HIGH);
-  long val = 0;
-  delay(1);
+  
+  unsigned long start = micros(); 
+  
+  delayMicroseconds(10);
   pinMode(p_sensor_pin,INPUT);
 
   //Wait for the voltage to fall bellow threshold of HIGH, if this takes too long 
   //then output maximum value
-  while(digitalRead(p_sensor_pin) == HIGH && val < MAX_LIMIT_SENSE)
-    val++;
+  while(digitalRead(p_sensor_pin) == HIGH && micros() - start < MAX_LIMIT_SENSE);
+    int val = micros() - start;
     
   return val;
 }
 
 void CloudRunner::test_read_sensor(){  
-  int pin2 = read_sensor(2)/32;
-  int pin4 = read_sensor(4)/32;
-  int pin5 = read_sensor(5)/32;
-  int pin7 = read_sensor(7)/32;
-  int pin8 = read_sensor(8)/32;
+  int pin2 = read_sensor(2)/30;
+  int pin4 = read_sensor(4)/30;
+  int pin5 = read_sensor(5)/30;
+  int pin7 = read_sensor(7)/30;
+  int pin8 = read_sensor(8)/30;
 
   //printing Raw Sensor Values
   Serial.print("Pin 2: ");
   Serial.print(pin2);
-  Serial.print("Pin 4: ");
+  Serial.print(" Pin 4: ");
   Serial.print(pin4);
-  Serial.print("Pin 5: ");
+  Serial.print(" Pin 5: ");
   Serial.print(pin5);
-  Serial.print("Pin 7: ");
+  Serial.print(" Pin 7: ");
   Serial.print(pin7);
-  Serial.print("Pin 8: ");
+  Serial.print(" Pin 8: ");
   Serial.println(pin8);
 }
 
@@ -67,10 +69,15 @@ void CloudRunner::test_read_sensor(){
 //-->Records lowest and highest values of sensor values during initiation phase (only for PID sensors)
 // Note: This sets the lowest and highest values for each sensor, since they are not uniform
 void CloudRunner::calibrate_PID_sensors(){
+  for (int i = 0; i < SENSOR_NUM; i++) {
+    LB_vals[i] = 1000;
+  }
   
   unsigned int start = millis(); 
 
   while (millis() - start < 5000) {
+    drive_motor(TURNRIGHT);
+
     for(int i=0, raw_val=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
       raw_val = read_sensor(pin)/32;   //read sensors for raw data     
 
@@ -79,10 +86,11 @@ void CloudRunner::calibrate_PID_sensors(){
       //Check if raw value is more than Upper bound for this sensor, set new upper bound if yes
       if(UB_vals[i] < raw_val) UB_vals[i] = raw_val;
 
-      if(pin == 5)                  // skip pin D6 (used) 
+      if(pin == 2 || pin == 5)                  // skip pin D6 (used) 
         pin += 1;
     }
   }
+  drive_motor(STOP_MOTORS);
 }
 
 
@@ -100,8 +108,8 @@ void CloudRunner::calibrate_turn_sensors(){
   while (millis() - start < 5000) {
 
     //Reading raw_values of sensor pins
-    L_raw_val = read_sensor(L_TURN_PIN)/32;   //read sensors for raw data 
-    R_raw_val = read_sensor(R_TURN_PIN)/32;   //read sensors for raw data 
+    L_raw_val = read_sensor(L_TURN_PIN)/30;   //read sensors for raw data 
+    R_raw_val = read_sensor(R_TURN_PIN)/30;   //read sensors for raw data 
     
     //----------------------Setting calibration constants for Left turn sensor------------------- 
     if(L_turn_lowest_val > L_raw_val) L_turn_lowest_val = L_raw_val;     //get values for normalizing Left turn sensor
@@ -146,7 +154,7 @@ int CloudRunner::get_pos() {
   int raw[SENSOR_NUM]= {0};   //contains raw values
   
   for(int i=0, pin= START_SENSOR_PIN; i < SENSOR_NUM;i++,pin++){
-    raw[i] = read_sensor(pin)/32;   //read sensors for raw data     
+    raw[i] = read_sensor(pin)/30;   //read sensors for raw data     
 
     if(pin == 2|| pin == 5)pin += 1;      // If using all sensors, skip D6 (used) 
       
@@ -167,7 +175,7 @@ int CloudRunner::get_pos() {
   pos = (torque * torque_multiplier)/ mass;
   
   
-  delay(50);
+  delay(1);
 
   return pos;
 }
@@ -220,8 +228,8 @@ void CloudRunner::check_turn(){
   int R_raw =0 , L_raw =0;
   int R_val =0, L_val=0;  //mapped raw values
 
-  R_raw = read_sensor(R_TURN_PIN)/32;
-  L_raw = read_sensor(L_TURN_PIN)/32;
+  R_raw = read_sensor(R_TURN_PIN)/30;
+  L_raw = read_sensor(L_TURN_PIN)/30;
   R_val = map(R_raw,R_turn_lowest_val,R_turn_highest_val,1,100);
   L_val = map(L_raw,L_turn_lowest_val,L_turn_highest_val,1,100);
 
@@ -235,10 +243,11 @@ void CloudRunner::check_turn(){
     L_turn_detected = true;
     R_turn_detected = false;
     Intersect_detected = false;
-  }else if(R_val > R_onblk_thresh && L_val > L_onblk_thresh && mass > 35){
+  }else if(R_raw > 95 && L_raw > 95 && mass > 35){
     Intersect_detected = true;
     R_turn_detected = false;
     L_turn_detected = false;
+
   } 
   //Set flags if turn detected
   
@@ -309,8 +318,8 @@ void CloudRunner::PID_steer(int p_PID_val) {
   float Rspeed = INIT_SPEED - p_PID_val;
 
   // The motor speed should not exceed the max PWM value
-  Lspeed = constrain(Lspeed, 50, 255);
-  Rspeed = constrain(Rspeed, 50, 255);
+  Lspeed = constrain(Lspeed, 10, 41);
+  Rspeed = constrain(Rspeed, 10, 41);
 
   analogWrite(L_SPEED_PIN, Lspeed); //Left Motor Speed
   analogWrite(R_SPEED_PIN, Rspeed); //Right Motor Speed
@@ -361,20 +370,21 @@ void CloudRunner::follow_line(){
 
     //Calculate PID value based on error
     PID_val = PID_calc(error);
-    Serial.println("spd add " + String(PID_val) + "\n");
+    
     //check for turns & intersections
-    check_turn();
+    test_read_sensor();
+    //check_turn();
     //Serial.println(count);
     //if junction detected, just move forward
     //and skip PID steer
-    /*
+    
     if(Intersect_detected){
-      
+      Serial.println(count);
       drive_motor(FORWARD_MOTORS);
-      delay(120);
+      delay(90);
 
       count++;
-      if(count >=4){
+      if(count >=2){
       break;
       }
       
@@ -382,8 +392,9 @@ void CloudRunner::follow_line(){
       //if turn isnt detected continue following line
       //Use calculated PID value
       PID_steer(PID_val);
-    }*/
-   PID_steer(PID_val);
+    }
+    PID_steer(PID_val);
+   
     
 
     //after checking for turns reset all flags

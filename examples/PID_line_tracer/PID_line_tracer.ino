@@ -9,12 +9,12 @@ void setup() {
   board.begin();
 
   //Set the PID constants here
-  board.set_Kp(16);
-  board.set_Kd(4);
-  board.set_Ki(0); 
+  board.set_Kp(1.9);
+  board.set_Kd(1.2);
+  board.set_Ki(0.01); 
   
   //Set your ideal center position here (for the line)
-  board.set_target_pos(49);
+  board.set_target_pos(96);
 
   //Set the other constants here, this should help you
   // solve any problems with the get pos

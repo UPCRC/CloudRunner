@@ -18,7 +18,7 @@ class CloudRunner{
         int L_onblk_thresh=0;    //threshold value for Left turn detection
 
         //Array of normalizing constants for each PID sensor
-        int LB_vals[SENSOR_NUM] = {100, 100, 100};
+        int LB_vals[SENSOR_NUM] = {1000, 1000, 1000};
         int UB_vals[SENSOR_NUM] = {0, 0, 0};
 
         //Global Variables for Line Tracing

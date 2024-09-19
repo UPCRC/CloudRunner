@@ -57,8 +57,9 @@ void loop() {
   //Use a white strip of paper with a 1cm thick line to simulate a competition surface
   //then move the black line back and forth and observe if the value for the position changes as expected
   //i.e what value is it on the left most and right mose
-  test_get_pos(); 
-  //board.test_read_sensor();
+
+  //test_get_pos(); 
+  board.test_read_sensor();
 
   //Uncomment this to use normalizing feature , note this assumes you had 
   //sucessfully called calibrate_PID_sensor()

@@ -1,10 +1,10 @@
 
-#define L_speed_pin 5 //D5
-#define R_speed_pin 6 //D6
-#define L_forward 14  //A0
-#define L_backward 15 //A1
-#define R_forward 16  //A2
-#define R_backward 17 //A3
+#define L_speed_pin 9 
+#define R_speed_pin 10 
+#define L_forward A2  
+#define L_backward A3 
+#define R_forward A0  
+#define R_backward A1                                                                          //A3
 #define constant_speed 100
 
 void setup() {
@@ -29,9 +29,9 @@ void loop() {
   digitalWrite(R_forward,HIGH);
   digitalWrite(R_backward,LOW);
   */
-
-  analogWrite(L_speed_pin,100);
-  analogWrite(R_speed_pin,100);
+  
+  analogWrite(L_speed_pin,200);
+  analogWrite(R_speed_pin,200);
 }
 
 

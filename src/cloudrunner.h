@@ -12,23 +12,30 @@
 class CloudRunner{
     private:
         //Tresholds and Calibration values for sensors
-        int L_turn_lowest_val = 100, L_turn_highest_val=0; //normalizing constants for Left turn sensor
-        int R_turn_lowest_val = 100, R_turn_highest_val=0; //normalizing constants for Right turn sensors
         int R_onblk_thresh=0;    //threshold value for Right turn detection
         int L_onblk_thresh=0;    //threshold value for Left turn detection
 
         //Array of normalizing constants for each PID sensor
-        int LB_vals[SENSOR_NUM] = {1000, 1000, 1000};
-        int UB_vals[SENSOR_NUM] = {0, 0, 0};
+        int LB_vals[SENSOR_NUM];
+        int UB_vals[SENSOR_NUM];
 
         //Global Variables for Line Tracing
-        int mass=0;
-        int torque=0;
-        int pos=0;
-        int target_pos =52;
-        int torque_multiplier=50;
-
+        float mass=0;
+        float torque=0;
+        float pos=0;
+        int target_pos =101;
+        int torque_multiplier=100;
+        int fivepin[5] = {2,4,5,7,8};
+        int threepin[3] = {4,5,7};
+        int *pin;
         int count = 0;
+
+        //Global variables for manual calibration
+        int L_spd_offset =0;
+        int R_spd_offset =0;
+        int LB_spd = 0;
+        int UB_spd = 255;
+        int INIT_spd = 60;
 
         //Global Variables for PID
         float Ki = 0, Kp = 4 , Kd = 2 ;
@@ -69,10 +76,22 @@ class CloudRunner{
         void set_Kp(int p_Kp);
         void set_Kd(int p_Kd);
         void set_Ki(int p_Ki);
+        void set_L_spd_offset(int offset);
+        void set_R_spd_offset(int offset);
+        void set_LB_spd(int speed);
+        void set_UB_spd(int speed);
+        void set_INIT_spd(int speed);
+
         int get_Kp();
         int get_Kd();
         int get_Ki();
         int get_count();
+        int get_L_spd_offset();
+        int get_R_spd_offset();
+        int get_LB_spd();
+        int get_UB_spd();
+        int get_INIT_spd();
+
 
         //Utility functions to get the set target position
         //which is used in follow_line() to calculate the error value

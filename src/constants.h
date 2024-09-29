@@ -4,8 +4,8 @@
 //GPIO assignment
 #define L_SPEED_PIN 9 //D10
 #define R_SPEED_PIN 10 //D9
-#define L_FORWARD A2  //A0
-#define L_BACKWARD A3 //A1
+#define L_FORWARD A3  //A0
+#define L_BACKWARD A2 //A1
 #define R_FORWARD A0  //A2
 #define R_BACKWARD A1 //A3
 
@@ -15,20 +15,17 @@
 #define REVERSE_MOTORS 2
 #define TURNLEFT  21
 #define TURNRIGHT 22
-#define TURNBACK 23 
-
-//Constants for PID functions
-#define INIT_SPEED 33  
+#define TURNBACK 23     
 
 
 //Constants for sensor functions/routines
-#define SENSOR_NUM 5        //Number of PID sensors  # set either to 5 or 3
-#define START_SENSOR_PIN 2  //Right most PID Sensor pin # set to 4 if using 3 sensors only
+#define SENSOR_NUM 3        //Number of PID sensors  # set either to 5 or 3
+#define START_SENSOR_PIN 4  //Right most PID Sensor pin # set to 4 if using 3 sensors only
 
 #define L_TURN_PIN 8        //Left turn sensor pin
 #define R_TURN_PIN 2        //Right turn sensor pin
 
 
 //Constants for Math/Limits
-#define MAX_LIMIT_SENSE 3000
+#define MAX_LIMIT_SENSE 10000
 #endif

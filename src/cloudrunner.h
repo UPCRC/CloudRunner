@@ -1,6 +1,7 @@
 /*
   cloudrunner.h - Library for using the CloudRat board.
   Created by Alfred Jason R. Abanto, April 27, 2024.
+  Updated by Neil Anthony D. Marmeto, October 13, 2024
   Released into the public domain.
 */
 
@@ -29,6 +30,7 @@ class CloudRunner{
         int threepin[3] = {4,5,7};
         int *pin;
         int count = 0;
+        int intersectionCount =0;
 
         //Global variables for manual calibration
         int L_spd_offset =0;
@@ -46,12 +48,8 @@ class CloudRunner{
         boolean L_turn_detected = false;
         boolean R_turn_detected = false;
         boolean Intersect_detected = false;
+        boolean with_intersection = false;
 
-        //PID related functions
-        void PID_steer(int p_PID_val);
-        int PID_calc(int p_error_val);
-        void check_turn();
-        void reset_turn_detect();
     public:
         CloudRunner();
 
@@ -66,21 +64,29 @@ class CloudRunner{
         int get_pos();
         int get_norm_pos();
 
+        //PID related functions
+        void PID_steer(int p_PID_val);
+        int PID_calc(int p_error_val);
+        void check_turn();
+        void reset_turn_detect();
+
         //Motor driver utility functions
         void beep_motor();
         void motor_quartersec_beep(int p_num_beep);
         void drive_motor(int p_direction);
-        void follow_line();
+
 
         //PID constants Setter & Getter functions
         void set_Kp(int p_Kp);
         void set_Kd(int p_Kd);
         void set_Ki(int p_Ki);
+        void set_count(int val);
         void set_L_spd_offset(int offset);
         void set_R_spd_offset(int offset);
         void set_LB_spd(int speed);
         void set_UB_spd(int speed);
         void set_INIT_spd(int speed);
+        void set_with_intersection(boolean statement, int count);
 
         int get_Kp();
         int get_Kd();
@@ -91,6 +97,9 @@ class CloudRunner{
         int get_LB_spd();
         int get_UB_spd();
         int get_INIT_spd();
+        boolean get_with_intersection();
+        int get_intersectionCount();
+        boolean intersection_detected();
 
 
         //Utility functions to get the set target position

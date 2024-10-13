@@ -60,6 +60,7 @@ void loop() {
 
   test_get_pos(); 
   print_raw_values();
+  delay(250);
 
   //Uncomment this to use normalizing feature , note this assumes you had 
   //sucessfully called calibrate_PID_sensor()

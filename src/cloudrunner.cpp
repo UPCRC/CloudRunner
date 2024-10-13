@@ -202,12 +202,10 @@ void CloudRunner::check_turn(){
 
   //turn detection logic
   if(R_val > R_onblk_thresh && L_val < L_onblk_thresh){
-    Serial.println("1");
     R_turn_detected = true;
     L_turn_detected = false;
     Intersect_detected = false;
   }else if(R_val < R_onblk_thresh && L_val > L_onblk_thresh){
-    Serial.println("2");
     L_turn_detected = true;
     R_turn_detected = false;
     Intersect_detected = false;
@@ -311,57 +309,6 @@ int CloudRunner::PID_calc(int p_error_val){
 }
 
 
-//----------------------Function to follow line using PID steering------------------
-//-> avoid latching by reseting all turn flags
-void CloudRunner::follow_line(){
-  //Initialize local PID variables to 0
-  int pos=0, error = 0, PID_val = 0;
-
-  //Endlessly follow line until Intersection, Turn or End of Maze
-  while(count < 3){
-    //Read motors and get the position of the line
-    pos = get_pos();
-
-    /*
-    if(mass > 1500){
-      break;    //Reached end of maze
-    }*/
-    
-    //Calculate error based on current position 
-    error = pos- target_pos;
-
-    //Calculate PID value based on error
-    PID_val = PID_calc(error);
-    
-    //check for turns & intersections
-    check_turn();
-    //if junction detected, just move forward
-    //and skip PID steer
-    
-    if(Intersect_detected){
-        Serial.println("turn detected\n");
-      drive_motor(FORWARD_MOTORS);
-      delay(100);
-      count++;
-      
-    }else{
-      //if turn isnt detected continue following line
-      //Use calculated PID value
-      PID_steer(PID_val);
-    }
-   
-    //after checking for turns reset all flags
-    reset_turn_detect();
-  }
-    //drive_motor(FORWARD_MOTORS);
-    //delay(250);
-    drive_motor(STOP_MOTORS);
-    delay(10000000);
-    return;
-  
-  
-}
-
 //--------------------------Function to use DC motors as mini buzzers-------------------
 //-> Use this function to provide feedback and make debugging easier
 void CloudRunner::beep_motor(){
@@ -428,6 +375,11 @@ void CloudRunner::set_Ki(int p_Ki){
   Ki = p_Ki;
 }
 
+void CloudRunner::set_count(int val)
+{
+  count = val;
+}
+
 void CloudRunner::set_L_spd_offset(int offset){
   L_spd_offset = offset;
 }
@@ -446,6 +398,12 @@ void CloudRunner::set_UB_spd(int speed){
 
 void CloudRunner::set_INIT_spd(int speed){
   INIT_spd = speed;
+}
+
+void CloudRunner::set_with_intersection(boolean statement, int count)
+{
+  with_intersection = statement;
+  intersectionCount = count;
 }
 
 int CloudRunner::get_Kp(){
@@ -482,6 +440,21 @@ int CloudRunner::get_UB_spd(){
 
 int CloudRunner::get_INIT_spd(){
     return INIT_spd;
+}
+
+boolean CloudRunner::get_with_intersection()
+{
+    return with_intersection;
+}
+
+int CloudRunner::get_intersectionCount()
+{
+    return intersectionCount;
+}
+
+boolean CloudRunner::intersection_detected()
+{
+    return Intersect_detected;
 }
 
 void CloudRunner::set_target_pos(int p_pos){

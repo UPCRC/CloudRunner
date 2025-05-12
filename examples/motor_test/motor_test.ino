@@ -1,10 +1,10 @@
 
-#define L_SPEED_PIN 9 //D9
-#define R_SPEED_PIN 10 //D10
-#define L_FORWARD A3  //A3
-#define L_BACKWARD A2 //A2
-#define R_FORWARD A0  //A0
-#define R_BACKWARD A1 //A1                                                                      
+#define L_SPEED_PIN 10 //D10
+#define R_SPEED_PIN 9 //D9
+#define L_FORWARD A0  //A0
+#define L_BACKWARD A1 //A1
+#define R_FORWARD A2 //A2
+#define R_BACKWARD A3 //A3                                                                      
 
 void setup() {
   //Setting up pinmodes
@@ -21,12 +21,12 @@ void loop() {
   digitalWrite(L_FORWARD,HIGH);
   digitalWrite(L_BACKWARD,LOW);
 
-  //digitalWrite(R_FORWARD,HIGH);
-  //digitalWrite(R_BACKWARD,LOW);
+  digitalWrite(R_FORWARD,HIGH);
+  digitalWrite(R_BACKWARD,LOW);
   
   
-  analogWrite(L_SPEED_PIN,100);
-  analogWrite(R_SPEED_PIN,100);
+  analogWrite(L_SPEED_PIN,255);
+  analogWrite(R_SPEED_PIN,255);
   //After running the code, if you motor operates in reverse, swap its pin
   //If all the pins are now correct, kindly change the same pins in the constants header file (constants.h)
 }

@@ -15,11 +15,6 @@ void CloudRunner::begin(){
   pinMode(R_FORWARD,OUTPUT);
   pinMode(R_BACKWARD,OUTPUT);
 
-  // In ver2 of the CloudRat board we found out that
-  // there is a bug in the circuit so we need to set 
-  // A6 and A7 as input
-  pinMode(A6, INPUT);
-  pinMode(A7, INPUT);
 
   // set the number of sensors operating for PID value
   if(SENSOR_NUM ==5)  pin = fivepin;
